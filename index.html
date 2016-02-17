@@ -1,0 +1,231 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>Anty Gravity</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta charset="utf-8">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="HandheldFriendly" content="true" />
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="HandheldFriendly" content="true" />
+	<meta name="robots" content="no index,nofollow" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="apple-mobile-web-app-title" content="Phaser App">
+	<meta name="viewport" content="initial-scale=1 maximum-scale=1 user-scalable=0 minimal-ui" />
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" >
+	<!-- non-retina iPhone pre iOS 7 -->
+	<link rel="apple-touch-icon" sizes="57x57" href="icons/app_icon_57x57.png">
+	<link rel="apple-touch-icon" sizes="60x60" href="icons/app_icon_60x60.png">
+	<!-- non-retina iPad pre iOS 7 -->
+	<link rel="apple-touch-icon" sizes="72x72" href="icons/app_icon_72x72.png">
+	<!-- non-retina iPad iOS 7 -->
+	<link rel="apple-touch-icon" sizes="76x76" href="icons/app_icon_76x76.png">
+	<!-- retina iPhone pre iOS 7 -->
+	<link rel="apple-touch-icon" sizes="114x114" href="icons/app_icon_114x114.png">
+	<!-- retina iPhone iOS 7 -->
+	<link rel="apple-touch-icon" sizes="120x120" href="icons/app_icon_120x120.png">
+	<!-- retina iPad pre iOS 7 -->
+	<link rel="apple-touch-icon" sizes="144x144" href="icons/app_icon_144x144.png">
+	<!-- retina iPad iOS 7 -->
+	<link rel="apple-touch-icon" sizes="152x152" href="icons/app_icon_152x152.png">
+	<link rel="apple-touch-icon" sizes="256x256" href="icons/app_icon_256x256.png">
+	<link rel="apple-touch-icon" sizes="512x512" href="icons/app_icon_512x512.png">
+	<link rel="apple-touch-icon" sizes="1024x1024" href="icons/app_icon_1024x1024.png">
+	<link rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
+
+	<script src="//html5sdk.galaxy.gs/PSGN.js" data-app_id="8408"></script>
+	<script>
+	    window.addEventListener('DOMContentLoaded', function(){
+	        // The SDK is now available for use
+	       $pp.PSGN.Ui.icon("topleft");  //This handles the Playphone Icon position
+	    }, false);
+	</script>
+	
+	<script src="src/lib/phaser.min.js"></script>
+	<script src="src/lib/ScaleManager2.min.js"></script>
+	<script src="src/game/scene/Boot.min.js"></script>
+	<script src="src/game/scene/Preloader.min.js"></script>
+	<script src="src/game/scene/MainMenu.min.js"></script>
+	<script src="src/game/scene/Instructions.min.js"></script>
+	<script src="src/game/scene/Game.min.js"></script>
+	<script src="src/game/scene/GameOver.min.js"></script>
+	
+</head>
+<body>
+
+	<div id="game"></div>
+	<div id="orientation"></div>
+
+<script type="text/javascript">
+(function () {
+	
+	"use strict";
+	
+	PrimeEight.AntyGravity.screen = "small";
+	PrimeEight.AntyGravity.srx = Math.max(window.innerWidth,window.innerHeight);
+	PrimeEight.AntyGravity.sry = Math.min(window.innerWidth,window.innerHeight);
+	
+	PrimeEight.AntyGravity.logicWidth = 480;
+	PrimeEight.AntyGravity.logicHeight = 320;
+	
+	// store asset dimensions as key/value pairs
+	// Using normal screen size for value
+	var assetListing = [
+		['fntSize', 42] 
+	],
+	r = PrimeEight.AntyGravity.logicWidth/PrimeEight.AntyGravity.logicHeight,
+	i,
+	device = new Phaser.Device(),
+	scaleFactor,
+	game;
+	
+	function setLarge(){
+		PrimeEight.AntyGravity.screen = "large";
+		PrimeEight.AntyGravity.gameWidth = 720;
+		PrimeEight.AntyGravity.cloudHeight = 138;
+		PrimeEight.AntyGravity.logoWidth = 420;
+		PrimeEight.AntyGravity.logoHeight = 213;
+		PrimeEight.AntyGravity.buttonsWidth = 262;
+		PrimeEight.AntyGravity.buttonsHeight = 70;
+		PrimeEight.AntyGravity.buttonsSoundWidth = 36;
+		PrimeEight.AntyGravity.buttonsSoundHeight = 36;
+	}
+	// Adjusts asset sizes according to scaleFactor and assigns to variables in PrimeEight.AntyGravity
+	function assignAssetSizes(scaleFactor, assetListing){
+		var len = assetListing.length;
+		for (i = 0; i < len; i++){
+			PrimeEight.AntyGravity[ assetListing[i][0] ] = Math.floor(assetListing[i][1] * scaleFactor);
+		}
+	}
+	
+	if(PrimeEight.AntyGravity.srx >= 360){
+		PrimeEight.AntyGravity.screen = "small";
+		PrimeEight.AntyGravity.gameWidth = 360;
+		PrimeEight.AntyGravity.cloudHeight = 70;
+		PrimeEight.AntyGravity.logoWidth = 210;
+		PrimeEight.AntyGravity.logoHeight = 107;
+		PrimeEight.AntyGravity.buttonsWidth = 131;
+		PrimeEight.AntyGravity.buttonsHeight = 35;
+		PrimeEight.AntyGravity.buttonsSoundWidth = 18;
+		PrimeEight.AntyGravity.buttonsSoundHeight = 18;
+	}
+	if(PrimeEight.AntyGravity.srx >= 480){
+		PrimeEight.AntyGravity.screen = "normal";
+		PrimeEight.AntyGravity.gameWidth = 480;
+		PrimeEight.AntyGravity.cloudHeight = 94;
+		PrimeEight.AntyGravity.logoWidth = 280;
+	 	PrimeEight.AntyGravity.logoHeight = 142;
+	 	PrimeEight.AntyGravity.buttonsWidth = 175;
+	 	PrimeEight.AntyGravity.buttonsHeight = 47;
+		PrimeEight.AntyGravity.buttonsSoundWidth = 24;
+		PrimeEight.AntyGravity.buttonsSoundHeight = 24;
+	}
+	if(PrimeEight.AntyGravity.srx >= 720){
+		setLarge();
+	}
+	if(PrimeEight.AntyGravity.srx >= 960){
+		PrimeEight.AntyGravity.screen = "xlarge";
+		PrimeEight.AntyGravity.gameWidth = 960;
+		PrimeEight.AntyGravity.cloudHeight = 195;
+		PrimeEight.AntyGravity.logoWidth = 561;
+		PrimeEight.AntyGravity.logoHeight = 283;
+		PrimeEight.AntyGravity.buttonsWidth = 350;
+		PrimeEight.AntyGravity.buttonsHeight = 94;
+		PrimeEight.AntyGravity.buttonsSoundWidth = 48;
+		PrimeEight.AntyGravity.buttonsSoundHeight = 48;
+	}
+	if(PrimeEight.AntyGravity.srx >= 1440){
+		PrimeEight.AntyGravity.screen = "xxlarge";
+		PrimeEight.AntyGravity.gameWidth = 1440;
+		PrimeEight.AntyGravity.cloudHeight = 274;	
+		PrimeEight.AntyGravity.logoWidth = 840;
+		PrimeEight.AntyGravity.logoHeight = 424;
+		PrimeEight.AntyGravity.buttonsWidth = 525;
+		PrimeEight.AntyGravity.buttonsHeight = 141;
+		PrimeEight.AntyGravity.buttonsSoundWidth = 72;
+		PrimeEight.AntyGravity.buttonsSoundHeight = 72;
+	}
+	
+	if(device.desktop){
+		PrimeEight.AntyGravity.desktop = true;
+		PrimeEight.AntyGravity.desktopScale = 1.5;
+		setLarge();
+	}
+	device = null;
+	
+	switch(PrimeEight.AntyGravity.screen){
+		case 'small':
+		scaleFactor = 0.75;
+		break;
+		
+		case 'normal':
+		scaleFactor = 1;
+		break; 
+		 
+		case 'large':
+		scaleFactor = 1.5;
+		break; 
+		
+		case 'xlarge':
+		scaleFactor = 2;
+		break;
+		
+		default:
+		scaleFactor = 3;			
+	}
+	assignAssetSizes(scaleFactor, assetListing);
+	
+	PrimeEight.AntyGravity.gameHeight = PrimeEight.AntyGravity.gameWidth/r;
+	if(PrimeEight.AntyGravity.screen === "small"){
+		PrimeEight.AntyGravity.numDots = 9;
+	}
+	else if(PrimeEight.AntyGravity.screen === "normal"){
+		PrimeEight.AntyGravity.numDots = 11;
+	}
+	else {
+		PrimeEight.AntyGravity.numDots = 12;
+	}
+	PrimeEight.AntyGravity.dotSize = Math.floor(PrimeEight.AntyGravity.gameWidth/(PrimeEight.AntyGravity.numDots + 1)); // + 1 to allow for margins
+	PrimeEight.AntyGravity.antSize = Math.floor(PrimeEight.AntyGravity.dotSize * 0.95);
+		
+	PrimeEight.AntyGravity.convertWidth = function(value){
+		return value/PrimeEight.AntyGravity.logicWidth * PrimeEight.AntyGravity.gameWidth; 
+	};
+	PrimeEight.AntyGravity.convertHeight = function(value){
+		return value/PrimeEight.AntyGravity.logicHeight * PrimeEight.AntyGravity.gameHeight;
+	};
+	
+	game = new Phaser.Game(PrimeEight.AntyGravity.gameWidth,PrimeEight.AntyGravity.gameHeight, Phaser.AUTO, 'game');
+
+	game.state.add('Boot', PrimeEight.AntyGravity.Boot);
+	game.state.add('Preloader', PrimeEight.AntyGravity.Preloader);
+	game.state.add('MainMenu', PrimeEight.AntyGravity.MainMenu);
+	game.state.add('Instructions', PrimeEight.AntyGravity.Instructions);
+	game.state.add('Game', PrimeEight.AntyGravity.Game);
+	game.state.add('GameOver', PrimeEight.AntyGravity.GameOver);
+
+	game.state.start('Boot');
+
+}());
+</script>
+<!-- Piwik -->
+<script type="text/javascript">
+  var _paq = _paq || [];
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//www.primitive.co/piwik/";
+    _paq.push(['setTrackerUrl', u+'piwik.php']);
+    _paq.push(['setSiteId', 1]);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<noscript><p><img src="//www.primitive.co/piwik/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+<!-- End Piwik Code -->
+</body>
+</html>
